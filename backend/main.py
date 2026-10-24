@@ -21,6 +21,9 @@ class PredictionRequest(BaseModel):
     control: list[StrictInt] = Field(min_length=2, max_length=2)
 
 class PredictionResponse(BaseModel):
+    white_win: float = Field(ge=0, le=1)
+    draw: float = Field(ge=0, le=1)
+    black_win: float = Field(ge=0, le=1)
     white_blunder: float = Field(ge=0, le=1)
     black_blunder: float = Field(ge=0, le=1)
     demo: bool
@@ -34,18 +37,17 @@ def predict(request: PredictionRequest):
     demo = os.getenv("BLUNDOMETER_DEMO", "0") == "1"
     try:
         result = (
-            {"white_blunder": 0.32, "black_blunder": 0.24}
+            {"white_win": 1, "draw": 0, "black_win": 0, "white_blunder": 0.32, "black_blunder": 0.24}
             if demo else predict_blunder(request)
         )
-        white = float(result["white_blunder"])
-        black = float(result["black_blunder"])
-        for probability in (white, black):
+        for key in ("white_win", "draw", "black_win","white_blunder", "black_blunder",):
+            probability = result[key]
             if not math.isfinite(probability) or not 0 <= probability <= 1:
-                raise ValueError("Invalid model probability")
+                raise ValueError(f"Invalid model probability: {key}")
     except NotImplementedError:
         raise HTTPException(503, "Prediction model is not connected") from None
     except Exception:
         logging.exception("Prediction failed")
         raise HTTPException(500, "Prediction failed") from None
-    return PredictionResponse(white_blunder=white, black_blunder=black, demo=demo)
+    return PredictionResponse(**result, demo=demo)
 
