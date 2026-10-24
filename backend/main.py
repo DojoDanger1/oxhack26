@@ -16,6 +16,10 @@ app.add_middleware(
 
 class PredictionRequest(BaseModel):
     fen: str = Field(min_length=1, max_length=512, pattern=r"\S")
+    timeA: float = Field(ge=0)
+    timeB: float = Field(ge=0)
+    eloA: int
+    eloB: int
 
 class PredictionResponse(BaseModel):
     blunder_probability: float = Field(ge=0, le=1)
@@ -29,7 +33,7 @@ def health():
 def predict(request: PredictionRequest):
     demo = os.getenv("BLUNDOMETER_DEMO", "0") == "1"
     try:
-        probability = 0.32 if demo else float(predict_blunder(request.fen))
+        probability = 0.32 if demo else float(predict_blunder(request))
         if not math.isfinite(probability) or not 0 <= probability <= 1:
             raise ValueError("Invalid model probability")
     except NotImplementedError:
