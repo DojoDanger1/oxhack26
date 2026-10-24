@@ -239,6 +239,7 @@ function requestPrediction() {
     let data;
     try {
         data = collectInputs();
+        console.log(data)
     } catch (error) {
         setStatus("reading page…", "wait");
         return;
