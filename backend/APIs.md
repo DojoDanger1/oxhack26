@@ -1,5 +1,5 @@
 Test API
-https://cemetery-coleman-humanities-payments.trycloudflare.com/docs
+https://pubmed-immunology-woods-gained.trycloudflare.com/docs
 
 Prediction API
-https://cemetery-coleman-humanities-payments.trycloudflare.com/prediction
+https://pubmed-immunology-woods-gained.trycloudflare.com/prediction

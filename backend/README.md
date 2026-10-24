@@ -11,7 +11,7 @@ python -m venv .venv
 API docs: http://127.0.0.1:8000/docs
 
 - GET /health returns process health (not model readiness).
-- POST /predict accepts {"fen":"<current position>"}.
+- POST /predict accepts {"fen":"<current position>","time":[120,95],"rating":[1500,1600],"control":[300,5]}.
 - Success: {"blunder_probability":0.32,"demo":false}.
 - 422: invalid request fields. FEN semantics are not yet validated.
 - 503: model not connected. 500: inference failed or returned an invalid probability.
@@ -35,3 +35,11 @@ Math.round(blunder_probability * 100).
 
 This is local development only: 127.0.0.1 is reachable only on the same computer.
 Public deployment requires an HTTPS host and its API URL in the extension.
+
+Request fields: fen is a non-blank string; time, rating, and control are required
+JSON arrays containing exactly two integers each. Strings, booleans, and floats
+are rejected as array items. Agree units and list ordering with the model owner;
+no meaning for the control pair is assumed by the API. The entire validated
+request is passed to predict_blunder(request). Old timeA/timeB/eloA/eloB fields
+do not replace the required arrays.
+

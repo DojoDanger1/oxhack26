@@ -3,7 +3,7 @@ import os
 import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictInt
 from predictor import predict_blunder
 
 app = FastAPI(title="Blundometer API")
@@ -16,10 +16,9 @@ app.add_middleware(
 
 class PredictionRequest(BaseModel):
     fen: str = Field(min_length=1, max_length=512, pattern=r"\S")
-    timeA: float = Field(ge=0)
-    timeB: float = Field(ge=0)
-    eloA: int
-    eloB: int
+    time: list[StrictInt] = Field(min_length=2, max_length=2)
+    rating: list[StrictInt] = Field(min_length=2, max_length=2)
+    control: list[StrictInt] = Field(min_length=2, max_length=2)
 
 class PredictionResponse(BaseModel):
     blunder_probability: float = Field(ge=0, le=1)
@@ -42,3 +41,4 @@ def predict(request: PredictionRequest):
         logging.exception("Prediction failed")
         raise HTTPException(500, "Prediction failed") from None
     return PredictionResponse(blunder_probability=probability, demo=demo)
+
