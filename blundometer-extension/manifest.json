@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "name": "My Simple Extension",
+    "version": "0.31",
+    "description": "Adds a custom element to a specific webpage.",
+    "host_permissions": [
+        "https://lichess.org/*",
+        "https://scholarships-match-frog-moment.trycloudflare.com/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://lichess.org/game/*"],
+            "js": ["content.js"],
+            "css": ["style.css"]
+        }
+    ]
+}

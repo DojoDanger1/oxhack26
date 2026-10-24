@@ -21,7 +21,11 @@ class PredictionRequest(BaseModel):
     control: list[StrictInt] = Field(min_length=2, max_length=2)
 
 class PredictionResponse(BaseModel):
-    blunder_probability: float = Field(ge=0, le=1)
+    white_win: float = Field(ge=0, le=1)
+    draw: float = Field(ge=0, le=1)
+    black_win: float = Field(ge=0, le=1)
+    white_blunder: float = Field(ge=0, le=1)
+    black_blunder: float = Field(ge=0, le=1)
     demo: bool
 
 @app.get("/health")
@@ -32,13 +36,18 @@ def health():
 def predict(request: PredictionRequest):
     demo = os.getenv("BLUNDOMETER_DEMO", "0") == "1"
     try:
-        probability = 0.32 if demo else float(predict_blunder(request))
-        if not math.isfinite(probability) or not 0 <= probability <= 1:
-            raise ValueError("Invalid model probability")
+        result = (
+            {"white_win": 1, "draw": 0, "black_win": 0, "white_blunder": 0.32, "black_blunder": 0.24}
+            if demo else predict_blunder(request)
+        )
+        for key in ("white_win", "draw", "black_win","white_blunder", "black_blunder",):
+            probability = result[key]
+            if not math.isfinite(probability) or not 0 <= probability <= 1:
+                raise ValueError(f"Invalid model probability: {key}")
     except NotImplementedError:
         raise HTTPException(503, "Prediction model is not connected") from None
     except Exception:
         logging.exception("Prediction failed")
         raise HTTPException(500, "Prediction failed") from None
-    return PredictionResponse(blunder_probability=probability, demo=demo)
+    return PredictionResponse(**result, demo=demo)
 
