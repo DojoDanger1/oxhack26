@@ -1,0 +1,4 @@
+# large / generated files that must never go to GitHub
+*.pgn
+data/
+__pycache__/
