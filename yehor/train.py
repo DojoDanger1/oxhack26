@@ -449,8 +449,18 @@ def load_model(path: str = MODEL_PATH, device: str | None = None) -> ClockNet:
 @torch.no_grad()
 def predict(model: ClockNet, fen: str, white_clock: float, black_clock: float,
             white_elo: float, black_elo: float, base_time: float, increment: float,
-            eval_cp: float | None = None, eval_mate: int | None = None) -> dict:
-    """Raw inputs -> probabilities, converted back to White / Black."""
+            eval_cp: float | None = None, eval_mate: int | None = None,
+            engine_depth: int = 12) -> dict:
+    """
+    Raw inputs -> probabilities, converted back to White / Black.
+
+    If neither eval_cp nor eval_mate is given, Stockfish evaluates the
+    position (see engine.py). The eval used is returned too, for the eval bar.
+    """
+    if eval_cp is None and eval_mate is None:
+        from engine import evaluate  # imported here so training never needs Stockfish
+        eval_cp, eval_mate = evaluate(fen, depth=engine_depth)
+
     b, s = encode_position(fen, white_clock, black_clock, white_elo, black_elo,
                            base_time, increment, eval_cp=eval_cp, eval_mate=eval_mate)
     device = next(model.parameters()).device
@@ -459,10 +469,14 @@ def predict(model: ClockNet, fen: str, white_clock: float, black_clock: float,
     blunder_now, blunder_next = torch.sigmoid(bll)[0].tolist()
 
     if fen.split()[1] == "w":
-        return {"white_win": win, "draw": draw, "black_win": loss,
-                "white_blunder": blunder_now, "black_blunder": blunder_next}
-    return {"white_win": loss, "draw": draw, "black_win": win,
-            "white_blunder": blunder_next, "black_blunder": blunder_now}
+        result = {"white_win": win, "draw": draw, "black_win": loss,
+                  "white_blunder": blunder_now, "black_blunder": blunder_next}
+    else:
+        result = {"white_win": loss, "draw": draw, "black_win": win,
+                  "white_blunder": blunder_next, "black_blunder": blunder_now}
+    result["eval_cp"] = eval_cp      # White's point of view
+    result["eval_mate"] = eval_mate
+    return result
 
 
 # ===========================================================================
