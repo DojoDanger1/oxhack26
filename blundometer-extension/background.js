@@ -1,6 +1,6 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "PREDICT") {
-        fetch("https://thriller-microwave-lunch-professor.trycloudflare.com/predict", {
+        fetch("https://railroad-parents-ranch-cons.trycloudflare.com/predict", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

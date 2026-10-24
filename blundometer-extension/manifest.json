@@ -5,7 +5,7 @@
     "description": "Adds a custom element to a specific webpage.",
     "host_permissions": [
         "https://lichess.org/*",
-        "https://thriller-microwave-lunch-professor.trycloudflare.com/*"
+        "https://railroad-parents-ranch-cons.trycloudflare.com/*"
     ],
     "background": {
         "service_worker": "background.js"

@@ -37,8 +37,8 @@ This is local development only: 127.0.0.1 is reachable only on the same computer
 Public deployment requires an HTTPS host and its API URL in the extension.
 
 Request fields: fen is a non-blank string; time, rating, and control are required
-JSON arrays containing exactly two integers each. Strings, booleans, and floats
-are rejected as array items. time is [White seconds, Black seconds], rating is [White Elo, Black Elo],
+JSON arrays containing exactly two numbers each. time may contain decimals
+(Lichess shows tenths of a second under 10s); rating and control must be integers. time is [White seconds, Black seconds], rating is [White Elo, Black Elo],
 and control is [base seconds, increment seconds]. The entire validated
 request is passed to predict_blunder(request). Old timeA/timeB/eloA/eloB fields
 do not replace the required arrays.

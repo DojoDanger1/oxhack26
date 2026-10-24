@@ -3,7 +3,7 @@ import os
 import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field, StrictInt
+from pydantic import BaseModel, Field, NonNegativeFloat, StrictInt
 from predictor import predict_blunder
 
 app = FastAPI(title="Blundometer API")
@@ -16,7 +16,8 @@ app.add_middleware(
 
 class PredictionRequest(BaseModel):
     fen: str = Field(min_length=1, max_length=512, pattern=r"\S")
-    time: list[StrictInt] = Field(min_length=2, max_length=2)
+    # floats allowed: Lichess shows tenths of a second under 10s (e.g. 9.4)
+    time: list[NonNegativeFloat] = Field(min_length=2, max_length=2)
     rating: list[StrictInt] = Field(min_length=2, max_length=2)
     control: list[StrictInt] = Field(min_length=2, max_length=2)
 
