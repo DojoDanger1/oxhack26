@@ -1,11 +1,17 @@
 {
     "manifest_version": 3,
     "name": "My Simple Extension",
-    "version": "0.35",
+    "version": "0.36",
     "description": "Adds a custom element to a specific webpage.",
     "host_permissions": [
         "https://lichess.org/*",
         "https://railroad-parents-ranch-cons.trycloudflare.com/*"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["imgs/blunder.png"],
+            "matches": ["https://lichess.org/*"]
+        }
     ],
     "background": {
         "service_worker": "background.js"
@@ -13,7 +19,7 @@
     "content_scripts": [
         {
             "matches": ["https://lichess.org/game/*"],
-            "js": ["content.js"],
+            "js": ["bulb.js", "content.js"],
             "css": ["style.css"]
         }
     ]

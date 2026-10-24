@@ -93,7 +93,7 @@ function collectInputs() {
 // ---------------------------------------------------------------------
 // UI
 // ---------------------------------------------------------------------
-const BULB_URL = chrome.runtime.getURL("imgs/blunder.png");
+const BULB_URL = (typeof BLUNDER_IMG !== "undefined") ? BLUNDER_IMG : chrome.runtime.getURL("imgs/blunder.png");
 
 function el(tag, className, parent) {
     const node = document.createElement(tag);
@@ -173,7 +173,7 @@ const ui = (() => {
 
     const status = el("div", "bm-status", overlay);
     status.dataset.state = "wait";
-    status.innerHTML = '<span class="bm-dot"></span><span class="bm-brand">BLUNDOMETER</span><span class="bm-msg">waiting for game…</span>';
+    status.innerHTML = '<span class="bm-dot"></span><span class="bm-msg">waiting for game…</span>';
     const statusMsg = status.querySelector(".bm-msg");
 
     document.body.appendChild(overlay);
@@ -181,11 +181,11 @@ const ui = (() => {
 })();
 
 function boardElement() {
-    return document.querySelector("cg-wrap") || document.querySelector(".round__app__board");
+    return document.querySelector(".cg-wrap") || document.querySelector(".round__app__board");
 }
 
 function whiteAtBottom() {
-    const wrap = document.querySelector("cg-wrap");
+    const wrap = document.querySelector(".cg-wrap");
     if (wrap && wrap.classList.contains("orientation-black")) return false;
     if (wrap && wrap.classList.contains("orientation-white")) return true;
     return pov !== "black";
@@ -225,6 +225,7 @@ function render(result) {
 
 function setStatus(text, state) {
     ui.statusMsg.textContent = text;
+    ui.status.title = `Blundometer: ${text}`;
     ui.status.dataset.state = state;
 }
 

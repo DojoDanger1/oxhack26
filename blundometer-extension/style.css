@@ -6,7 +6,8 @@
     --bm-red: #fa412d;          /* the red of imgs/blunder.png */
     --bm-red-deep: #c8271a;
     --bm-red-hot: #ff8a5c;
-    --bm-gap: 10px;
+    --bm-gap: 4px;              /* thermometer <-> board */
+    --bm-side-gap: 14px;        /* win/draw/loss bar <-> board */
     --bm-bulb: 40px;
     --bm-tube: 22px;
     --bm-tuck: 16px;            /* how far the tube slides under the bulb */
@@ -23,7 +24,7 @@
 .bm-slot { position: absolute; }
 .bm-slot-top    { left: 0; right: 0; bottom: calc(100% + var(--bm-gap)); }
 .bm-slot-bottom { left: 0; right: 0; top: calc(100% + var(--bm-gap)); }
-.bm-slot-left   { top: 0; bottom: 0; right: calc(100% + var(--bm-gap)); width: 16px; }
+.bm-slot-left   { top: 0; bottom: 0; right: calc(100% + var(--bm-side-gap)); width: 16px; }
 
 /* ---------------- thermometer ---------------- */
 
@@ -223,30 +224,28 @@
     letter-spacing: -0.02em;
 }
 
-/* ---------------- status pill ---------------- */
+/* ---------------- status badge (top-left corner, beside the board) ---------------- */
 
 .bm-status {
     position: absolute;
-    right: 0;
-    top: calc(100% + var(--bm-gap) + var(--bm-bulb) + 6px);
+    right: calc(100% + var(--bm-side-gap) - 7px);
+    bottom: calc(100% + var(--bm-gap) + 5px);
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
-    gap: 7px;
-    padding: 4px 10px 4px 8px;
-    border-radius: 999px;
+    justify-content: center;
+    border-radius: 50%;
     background: var(--bm-glass);
     border: 1px solid var(--bm-edge);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    color: #fff;
-    font-size: 10px;
-    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
-.bm-brand { font-weight: 800; letter-spacing: 0.2em; }
-.bm-msg { opacity: 0.65; }
+.bm-msg { display: none; }              /* kept for the tooltip/debugging */
 .bm-dot {
-    width: 7px;
-    height: 7px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     background: #f5b843;
 }
@@ -256,6 +255,16 @@
     animation: bm-ping 1.6s ease-out infinite;
 }
 .bm-status[data-state="error"] .bm-dot { background: var(--bm-red); }
+
+/* ---------------- make room in Lichess's layout ---------------- */
+/* Lichess packs the board tightly between the header, the side panels and
+   the crosstable; open up just enough space for the thermometers and bar. */
+
+main.round {
+    margin-top: 46px;
+    row-gap: 58px;
+    column-gap: 44px;
+}
 
 /* ---------------- animations ---------------- */
 
