@@ -92,6 +92,26 @@ button.addEventListener("click", () => {
     console.log(times)
     console.log(ratings)
     console.log(control)
+    
+    chrome.runtime.sendMessage(
+        {
+            type: "PREDICT",
+            data: {"fen": fen, "time": times, "rating": ratings, "control": control}
+        },
+        response => {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+                return;
+            }
+
+            if (!response.success) {
+                console.error("API error:", response.error);
+                return;
+            }
+
+            console.log("Prediction:", response.result);
+        }
+    );
 });
 
 document.body.appendChild(button);
