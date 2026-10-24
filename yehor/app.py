@@ -6,3 +6,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from train import load_model, predict
 model = load_model()
 print(predict(model, "r1bqkbnr/1ppp1ppp/p7/4n2Q/4P3/2P5/PP1P1PPP/RNB1KB1R b KQkq - 0 1", 300, 300, 1200, 2100, 600, 0, eval_cp=35))
+
+# Parameter names below:
+
+# def predict(model: ClockNet, fen: str, white_clock: float, black_clock: float,
+#             white_elo: float, black_elo: float, base_time: float, increment: float,
+#             eval_cp: float | None = None, eval_mate: int | None = None) -> dict:
