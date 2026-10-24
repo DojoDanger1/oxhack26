@@ -7,6 +7,12 @@
         "https://lichess.org/*",
         "https://railroad-parents-ranch-cons.trycloudflare.com/*"
     ],
+    "web_accessible_resources": [
+        {
+            "resources": ["imgs/blunder.png"],
+            "matches": ["https://lichess.org/*"]
+        }
+    ],
     "background": {
         "service_worker": "background.js"
     },
