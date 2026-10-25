@@ -5,7 +5,7 @@
     "description": "Adds a custom element to a specific webpage.",
     "host_permissions": [
         "https://lichess.org/*",
-        "https://railroad-parents-ranch-cons.trycloudflare.com/*"
+        "https://meat-jewellery-emotional-care.trycloudflare.com/*"
     ],
     "web_accessible_resources": [
         {
